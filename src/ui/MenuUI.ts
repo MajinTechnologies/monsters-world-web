@@ -27,9 +27,11 @@ export class MenuUI {
   private settingsUI!: SettingsUI;
 
   private currentScreen: string = '';
+  private onCampaign?: () => void;
 
-  constructor(containerId: string = 'ui-inner') {
+  constructor(containerId: string = 'ui-inner', onCampaign?: () => void) {
     this.container = document.getElementById(containerId)!;
+    this.onCampaign = onCampaign;
   }
 
   init(onReady?: () => void): void {
@@ -53,6 +55,12 @@ export class MenuUI {
       if (this.currentScreen === 'collection') {
         this.collectionUI.refresh();
       }
+    });
+
+    // Campaign button
+    const btnCampaign = document.getElementById('btn-campaign');
+    btnCampaign?.addEventListener('click', () => {
+      if (this.onCampaign) this.onCampaign();
     });
 
     if (onReady) onReady();
@@ -116,5 +124,15 @@ export class MenuUI {
 
   hideTabBar(): void {
     this.tabBar.hide();
+  }
+
+  hideUI(): void {
+    this.container.classList.add('hidden');
+    this.tabBar.hide();
+  }
+
+  showUI(): void {
+    this.container.classList.remove('hidden');
+    this.tabBar.show();
   }
 }
