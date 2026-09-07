@@ -6,6 +6,7 @@
 import Phaser from 'phaser';
 import './styles.css';
 import { MainMenuScene } from './scenes/MainMenuScene';
+import { BattleScene } from './scenes/BattleScene';
 
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
@@ -17,7 +18,14 @@ const config: Phaser.Types.Core.GameConfig = {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
-  scene: [MainMenuScene],
+  physics: {
+    default: 'matter',
+    matter: {
+      gravity: { x: 0, y: 0 },
+      debug: false,
+    },
+  },
+  scene: [MainMenuScene, BattleScene],
 };
 
 new Phaser.Game(config);

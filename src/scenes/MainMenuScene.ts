@@ -15,9 +15,24 @@ export class MainMenuScene extends Phaser.Scene {
   }
 
   create(): void {
-    this.menuUI = new MenuUI('ui-inner');
+    // Show UI in case we're coming back from battle
+    const uiInner = document.getElementById('ui-inner');
+    if (uiInner) uiInner.classList.remove('hidden');
+    const tabBar = document.getElementById('tab-bar');
+    if (tabBar) tabBar.classList.remove('hidden');
+
+    this.menuUI = new MenuUI('ui-inner', () => this.startBattle());
     this.menuUI.init(() => {
       this.menuUI.startLoading();
     });
+  }
+
+  private startBattle(): void {
+    this.menuUI.hideUI();
+    this.scene.start('BattleScene');
+  }
+
+  showMenu(): void {
+    this.menuUI.showUI();
   }
 }
