@@ -1,0 +1,7 @@
+# Nunca al repo:
+node_modules/
+.secrets/
+.env
+.env.*
+auth.json
+bun.lock
