@@ -1,32 +1,59 @@
 /**
  * SettingsUI — pantalla de configuración.
  * 4 secciones: Audio, Controles, Cuenta, Créditos.
- * Cada toggle funciona como switch visual on/off.
+ * Audio usa sliders de volumen (0-100) persistidos en localStorage (SettingsStore);
+ * Controles conserva el toggle de vibración.
  */
+
+import { GameSettings, SettingsStore } from '../../data/SettingsStore';
+
+const VOLUME_KEYS = ['sound', 'music'] as const;
 
 export class SettingsUI {
   private screen: HTMLElement;
-  private settings: Record<string, boolean> = {
-    sound: true,
-    music: true,
-    vibration: true,
-  };
+  private store: SettingsStore;
 
-  constructor() {
+  constructor(store?: SettingsStore) {
     this.screen = document.getElementById('screen-settings')!;
-    this.initToggles();
+    this.store = store ?? new SettingsStore();
+    this.applySettings();
+    this.initSliders();
+    this.initVibrationToggle();
   }
 
-  private initToggles(): void {
-    const toggles = this.screen.querySelectorAll('.toggle-track');
-    toggles.forEach(track => {
-      track.addEventListener('click', () => {
-        const key = (track as HTMLElement).dataset.key;
-        if (key && key in this.settings) {
-          this.settings[key] = !this.settings[key];
-          track.classList.toggle('active', this.settings[key]);
+  /** Vuelca el estado persistido en sliders, labels y toggle. */
+  private applySettings(): void {
+    const settings = this.store.getSettings();
+    for (const key of VOLUME_KEYS) {
+      const slider = this.screen.querySelector<HTMLInputElement>(`#slider-${key}`);
+      const valueLabel = this.screen.querySelector<HTMLElement>(`#slider-${key}-value`);
+      if (slider) slider.value = String(settings[key]);
+      if (valueLabel) valueLabel.textContent = String(settings[key]);
+    }
+    const vibration = this.screen.querySelector<HTMLElement>('#toggle-vibration');
+    vibration?.classList.toggle('active', settings.vibration);
+  }
+
+  private initSliders(): void {
+    for (const key of VOLUME_KEYS) {
+      const slider = this.screen.querySelector<HTMLInputElement>(`#slider-${key}`);
+      if (!slider) continue;
+      slider.addEventListener('input', () => {
+        this.store.setVolume(key, parseInt(slider.value, 10));
+        const valueLabel = this.screen.querySelector<HTMLElement>(`#slider-${key}-value`);
+        if (valueLabel) {
+          valueLabel.textContent = String(this.store.getSettings()[key]);
         }
       });
+    }
+  }
+
+  private initVibrationToggle(): void {
+    const toggle = this.screen.querySelector<HTMLElement>('#toggle-vibration');
+    toggle?.addEventListener('click', () => {
+      const enabled = !this.store.getSettings().vibration;
+      this.store.setVibration(enabled);
+      toggle.classList.toggle('active', enabled);
     });
   }
 
@@ -38,7 +65,7 @@ export class SettingsUI {
     this.screen.classList.add('hidden');
   }
 
-  getSettings(): Record<string, boolean> {
-    return { ...this.settings };
+  getSettings(): GameSettings {
+    return this.store.getSettings();
   }
 }

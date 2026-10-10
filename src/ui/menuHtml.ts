@@ -159,17 +159,23 @@ export const MENU_HTML = `
   </div>
   <h2 class="text-xl font-bold text-center text-game-orange mb-4">Configuraci&oacute;n</h2>
   <div class="flex flex-col gap-4 px-4">
-    <div class="rounded-xl bg-white/5 p-4">
-      <h3 class="text-sm font-bold text-game-orange mb-3 uppercase tracking-wider">Audio</h3>
-      <div class="flex items-center justify-between mb-3">
-        <span class="text-sm text-white">Sonido</span>
-        <div id="toggle-sound" class="toggle-track active" data-key="sound"><div class="toggle-thumb"></div></div>
+<div class="rounded-xl bg-white/5 p-4">
+        <h3 class="text-sm font-bold text-game-orange mb-3 uppercase tracking-wider">Audio</h3>
+        <div class="flex flex-col gap-2 mb-4">
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-white">Sonido</span>
+            <span id="slider-sound-value" class="text-sm font-bold text-game-orange">100</span>
+          </div>
+          <input type="range" id="slider-sound" min="0" max="100" value="100" aria-label="Volumen de sonido" />
+        </div>
+        <div class="flex flex-col gap-2">
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-white">M&uacute;sica</span>
+            <span id="slider-music-value" class="text-sm font-bold text-game-orange">100</span>
+          </div>
+          <input type="range" id="slider-music" min="0" max="100" value="100" aria-label="Volumen de m&uacute;sica" />
+        </div>
       </div>
-      <div class="flex items-center justify-between">
-        <span class="text-sm text-white">M&uacute;sica</span>
-        <div id="toggle-music" class="toggle-track active" data-key="music"><div class="toggle-thumb"></div></div>
-      </div>
-    </div>
     <div class="rounded-xl bg-white/5 p-4">
       <h3 class="text-sm font-bold text-game-orange mb-3 uppercase tracking-wider">Controles</h3>
       <div class="flex items-center justify-between">

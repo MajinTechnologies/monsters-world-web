@@ -55,6 +55,14 @@ html, body {
 }
 .toggle-track.active .toggle-thumb { transform: translateX(22px); }
 
+/* ===== Volume slider (Config screen) ===== */
+#screen-settings input[type="range"] {
+  width: 100%;
+  accent-color: #f59e0b;
+  cursor: pointer;
+  background: transparent;
+}
+
 /* ===== Card hover ===== */
 .card-hover {
   transition: transform 0.15s, box-shadow 0.15s;
