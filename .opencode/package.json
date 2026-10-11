@@ -1,9 +1,0 @@
-{
-  "name": "kairos-worker-opencode",
-  "private": true,
-  "description": "Perfil portable de opencode para el worker de CI de Kairos (PoC)",
-  "dependencies": {
-    "@modelcontextprotocol/server-github": "2025.4.8",
-    "@opencode-ai/plugin": "1.18.35"
-  }
-}
