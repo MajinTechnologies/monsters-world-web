@@ -1,4 +1,4 @@
-# Workflow delgado del consumidor — Kairos CI (plantilla copiable).
+# Workflow delgado del consumidor Ã”Ã‡Ã¶ Kairos CI (plantilla copiable).
 #
 # Este es el UNICO archivo que un repo consumidor copia. Dispara el pipeline
 # reutilizable del repo worker
@@ -56,7 +56,7 @@ jobs:
     #
     # bump: el ref del `uses:` es la version de kairos-ci (vX.Y.Z); el input
     # `worker_ref` es el tag del perfil privado en kairos-worker-poc (kairos/vX.Y.Z).
-    uses: MajinTechnologies/kairos-ci/.github/workflows/kairos-pipeline.yml@v1.0.0
+    uses: MajinTechnologies/kairos-ci/.github/workflows/kairos-pipeline.yml@v1.0.1
     with:
       mode: ${{ inputs.mode || 'chain' }}
       issue_number: ${{ github.event.issue.number }}
