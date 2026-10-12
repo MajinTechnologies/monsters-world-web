@@ -32,7 +32,8 @@ Juego web de **pinball + colección de monstruos** estilo Pokémon. Captura mons
 ## 🚀 Instalación
 
 ```bash
-cd "Monsters World Web"
+git clone https://github.com/MajinTechnologies/monsters-world-web.git
+cd monsters-world-web
 npm install
 npm run dev
 ```
@@ -46,6 +47,15 @@ El servidor de desarrollo arranca en `http://localhost:3000`.
 | `npm run dev` | Servidor de desarrollo con hot reload |
 | `npm run build` | Build de producción en `dist/` |
 | `npm run preview` | Vista previa del build de producción |
+| `npm test` | Ejecuta la suite de tests (`vitest run`) |
+
+---
+
+## 🤝 Contribuir
+
+¿Querés sumar código o documentación? Mirá la guía de contribución
+**[CONTRIBUTING.md](./CONTRIBUTING.md)**: setup local, comandos, tests
+(Vitest) y convenciones de commits, ramas y pull requests.
 
 ---
 
