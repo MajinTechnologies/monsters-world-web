@@ -1,4 +1,4 @@
-# Workflow delgado del consumidor Ã”Ã‡Ã¶ Kairos CI (plantilla copiable).
+# Workflow delgado del consumidor ?????????????? Kairos CI (plantilla copiable).
 #
 # Este es el UNICO archivo que un repo consumidor copia. Dispara el pipeline
 # reutilizable del repo worker
@@ -61,7 +61,7 @@ jobs:
       mode: ${{ inputs.mode || 'chain' }}
       issue_number: ${{ github.event.issue.number }}
       event_name: ${{ github.event_name }}
-      worker_ref: kairos/v1.0.1
+      worker_ref: kairos/v1.1.0
       operator_name: "Lucas"   # ajustar por proyecto (MAJIN_OPERATOR_NAME)
     # Secretos: OPENCODE_AUTH/GROQ_API_KEY opcionales (auth del worker);
     # KAIROS_WORKER_TOKEN es el PAT fine-grained que baja el perfil .opencode/
