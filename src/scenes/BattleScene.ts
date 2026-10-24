@@ -32,7 +32,7 @@ export class BattleScene extends Phaser.Scene {
     // --- Arena border ---
     const border = this.add.graphics();
     border.lineStyle(5, 0xffffff, 0.6);
-    border.strokeRect(0, 0, 1080, 1920);
+    border.strokeRoundedRect(0, 0, 1080, 1920, 45);
 
     // --- Player ball (purple, dynamic) ---
     const playerCircle = this.add.circle(540, 1500, 30, 0x8b5cf6);
