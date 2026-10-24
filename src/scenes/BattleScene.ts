@@ -13,6 +13,7 @@ export class BattleScene extends Phaser.Scene {
   private isDragging = false;
   private canDrag = true;
   private directionLine: Phaser.GameObjects.Graphics | null = null;
+  private launchTime = 0;
 
   // Enemy stats
   private enemyHp = 100;
@@ -93,6 +94,18 @@ export class BattleScene extends Phaser.Scene {
         this.canDrag = true;
       } else if (velocity >= 0.3) {
         this.canDrag = false;
+
+        // Gradual braking after 1.2s from launch
+        if (!this.isDragging && this.launchTime > 0) {
+          const elapsed = performance.now() - this.launchTime;
+          if (elapsed >= 1200) {
+            const bv = body.velocity;
+            this.matter.body.setVelocity(body, {
+              x: bv.x * 0.97,
+              y: bv.y * 0.97,
+            });
+          }
+        }
       }
     }
   }
@@ -140,9 +153,10 @@ export class BattleScene extends Phaser.Scene {
     // Line length = drag distance (clamped)
     const lineLength = Math.min(dist, 400);
 
-    // Start from ball, extend in launch direction
-    const startX = this.dragOrigin.x;
-    const startY = this.dragOrigin.y;
+    // Start from edge of ball, slightly offset
+    const ballRadius = 30;
+    const startX = this.dragOrigin.x + normX * (ballRadius + 2);
+    const startY = this.dragOrigin.y + normY * (ballRadius + 2);
     const endX = startX + normX * lineLength;
     const endY = startY + normY * lineLength;
 
@@ -182,10 +196,13 @@ export class BattleScene extends Phaser.Scene {
       const maxVelocity = 25;
       const velocityMagnitude = Math.min(dist * 0.15, maxVelocity);
 
-      this.matter.body.setVelocity(body, {
-        x: normX * velocityMagnitude,
-        y: normY * velocityMagnitude,
-      });
+      if (velocityMagnitude > 0) {
+        this.matter.body.setVelocity(body, {
+          x: normX * velocityMagnitude,
+          y: normY * velocityMagnitude,
+        });
+        this.launchTime = performance.now();
+      }
     }
 
     // Hide direction line
