@@ -155,8 +155,8 @@ export class BattleScene extends Phaser.Scene {
 
     // Start from edge of ball, slightly offset
     const ballRadius = 30;
-    const startX = this.dragOrigin.x + normX * (ballRadius + 2);
-    const startY = this.dragOrigin.y + normY * (ballRadius + 2);
+    const startX = this.dragOrigin.x + normX * (ballRadius + 6);
+    const startY = this.dragOrigin.y + normY * (ballRadius + 6);
     const endX = startX + normX * lineLength;
     const endY = startY + normY * lineLength;
 
