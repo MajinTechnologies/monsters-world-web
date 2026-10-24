@@ -63,6 +63,27 @@ export class MenuUI {
       if (this.onCampaign) this.onCampaign();
     });
 
+    // Online / Mundial blocked
+    const btnOnline = document.getElementById('btn-online');
+    const btnWorld = document.getElementById('btn-world');
+    const constructionModal = document.getElementById('construction-modal');
+    const constructionModalClose = document.getElementById('construction-modal-close');
+
+    btnOnline?.addEventListener('click', () => {
+      constructionModal?.classList.remove('hidden');
+    });
+    btnWorld?.addEventListener('click', () => {
+      constructionModal?.classList.remove('hidden');
+    });
+    constructionModalClose?.addEventListener('click', () => {
+      constructionModal?.classList.add('hidden');
+    });
+    constructionModal?.addEventListener('click', (e) => {
+      if (e.target === constructionModal) {
+        constructionModal.classList.add('hidden');
+      }
+    });
+
     if (onReady) onReady();
   }
 
