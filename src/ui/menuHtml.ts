@@ -1,5 +1,5 @@
 /**
- * menuHtml — raw HTML template for all menu screens.
+ * menuHtml â€” raw HTML template for all menu screens.
  * Exported as a string constant for use by MenuUI.
  */
 
@@ -37,8 +37,8 @@ export const MENU_HTML = `
   </div>
   <div class="flex flex-col gap-3 px-6 pb-28">
     <button id="btn-campaign" class="card-hover w-full py-4 rounded-xl bg-game-orange text-white text-lg font-bold shadow-lg shadow-game-orange/30">&#x1F3F0; Campa&ntilde;a</button>
-    <button id="btn-online" class="card-hover w-full py-4 rounded-xl bg-game-blue text-white text-lg font-bold shadow-lg shadow-game-blue/30">&#x1F310; Online</button>
-    <button id="btn-world" class="card-hover w-full py-4 rounded-xl bg-game-purple text-white text-lg font-bold shadow-lg shadow-game-purple/30">&#x1F30D; Mundial</button>
+    <button id="btn-online" class="card-hover w-full py-4 rounded-xl bg-game-blue/70 text-white text-lg font-bold shadow-lg shadow-game-blue/20 relative"><span class="absolute left-4">&#x1F512;</span><span class="inline-block ml-6">&#x1F310; Online</span></button>
+    <button id="btn-world" class="card-hover w-full py-4 rounded-xl bg-game-purple/70 text-white text-lg font-bold shadow-lg shadow-game-purple/20 relative"><span class="absolute left-4">&#x1F512;</span><span class="inline-block ml-6">&#x1F30D; Mundial</span></button>
   </div>
 </div>
 
@@ -202,6 +202,16 @@ export const MENU_HTML = `
   </div>
 </div>
 
+<!-- ===== CONSTRUCTION MODAL ===== -->
+<div id="construction-modal" class="hidden fixed inset-0 z-[150] flex items-center justify-center" style="background:rgba(0,0,0,0.7);">
+  <div class="modal-glow absolute inset-0 pointer-events-none"></div>
+  <div class="relative z-10 bg-[#1e1e2e] border-2 border-white/10 rounded-2xl p-6 mx-6 flex flex-col items-center gap-4 max-w-sm w-full">
+    <span class="text-5xl">&#x1F6A7;</span>
+    <p class="text-center text-white text-sm leading-relaxed">¡Cuidado con el pasto recién cortado! Todavía estamos en obras, pero te avisamos cuando el estadio esté listo para la inauguración.</p>
+    <button id="construction-modal-close" class="mt-2 w-full py-3 rounded-xl bg-game-orange text-white font-bold text-lg card-hover shadow-lg shadow-game-orange/30">Cerrar</button>
+  </div>
+</div>
+
 <!-- ===== GACHA RESULT MODAL ===== -->
 <div id="gacha-modal" class="hidden fixed inset-0 z-[150] flex items-center justify-center" style="background:rgba(0,0,0,0.7);">
   <div class="modal-glow absolute inset-0 pointer-events-none"></div>
@@ -238,3 +248,4 @@ export const MENU_HTML = `
   </div>
 </div>
 `;
+;

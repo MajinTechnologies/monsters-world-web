@@ -69,19 +69,18 @@ export class MenuUI {
     const constructionModal = document.getElementById('construction-modal');
     const constructionModalClose = document.getElementById('construction-modal-close');
 
-    btnOnline?.addEventListener('click', () => {
+    const showConstruction = () => {
       constructionModal?.classList.remove('hidden');
-    });
-    btnWorld?.addEventListener('click', () => {
-      constructionModal?.classList.remove('hidden');
-    });
-    constructionModalClose?.addEventListener('click', () => {
+    };
+    const hideConstruction = () => {
       constructionModal?.classList.add('hidden');
-    });
+    };
+
+    btnOnline?.addEventListener('click', showConstruction);
+    btnWorld?.addEventListener('click', showConstruction);
+    constructionModalClose?.addEventListener('click', hideConstruction);
     constructionModal?.addEventListener('click', (e) => {
-      if (e.target === constructionModal) {
-        constructionModal.classList.add('hidden');
-      }
+      if (e.target === constructionModal) hideConstruction();
     });
 
     if (onReady) onReady();

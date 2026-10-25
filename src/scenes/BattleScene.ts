@@ -27,15 +27,15 @@ export class BattleScene extends Phaser.Scene {
     this.cameras.main.setBackgroundColor('#1e1e2e');
 
     // --- Arena walls (static) ---
-    this.matter.world.setBounds(0, 0, 1080, 1920);
+    this.matter.world.setBounds(60, 110, 960, 1700);
 
     // --- Arena border ---
     const border = this.add.graphics();
     border.lineStyle(5, 0xffffff, 0.6);
-    border.strokeRoundedRect(0, 0, 1080, 1920, 45);
+    border.strokeRoundedRect(60, 110, 960, 1700, 40);
 
     // --- Player ball (purple, dynamic) ---
-    const playerCircle = this.add.circle(540, 1500, 30, 0x8b5cf6);
+    const playerCircle = this.add.circle(540, 1610, 30, 0x8b5cf6);
     this.player = this.matter.add.gameObject(playerCircle, {
       restitution: 0.9,
       friction: 0.001,
@@ -49,7 +49,7 @@ export class BattleScene extends Phaser.Scene {
     this.directionLine = this.add.graphics();
 
     // --- Enemy (fire-red, static) ---
-    const enemyCircle = this.add.circle(540, 400, 40, 0xef4444);
+    const enemyCircle = this.add.circle(540, 260, 40, 0xef4444);
     const enemyObj = this.matter.add.gameObject(enemyCircle, {
       isStatic: true,
       restitution: 0.9,
