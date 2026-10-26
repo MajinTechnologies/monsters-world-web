@@ -35,7 +35,7 @@ export class BattleScene extends Phaser.Scene {
     border.strokeRoundedRect(60, 110, 960, 1700, 40);
 
     // --- Player ball (purple, dynamic) ---
-    const playerCircle = this.add.circle(540, 1610, 30, 0x8b5cf6);
+    const playerCircle = this.add.circle(540, 1610, 36, 0x8b5cf6);
     this.player = this.matter.add.gameObject(playerCircle, {
       restitution: 0.9,
       friction: 0.001,
@@ -49,7 +49,7 @@ export class BattleScene extends Phaser.Scene {
     this.directionLine = this.add.graphics();
 
     // --- Enemy (fire-red, static) ---
-    const enemyCircle = this.add.circle(540, 260, 40, 0xef4444);
+    const enemyCircle = this.add.circle(540, 260, 48, 0xef4444);
     const enemyObj = this.matter.add.gameObject(enemyCircle, {
       isStatic: true,
       restitution: 0.9,
@@ -137,8 +137,8 @@ export class BattleScene extends Phaser.Scene {
       this.player.x, this.player.y
     );
 
-    // Allow drag within 150px radius
-    if (dist < 150) {
+    // Allow drag within 180px radius
+    if (dist < 180) {
       this.isDragging = true;
 
       // Save ball position as slingshot origin
@@ -173,7 +173,7 @@ export class BattleScene extends Phaser.Scene {
     const lineLength = Math.min(dist, 400);
 
     // Start from edge of ball, slightly offset
-    const ballRadius = 30;
+    const ballRadius = 36;
     const startX = this.dragOrigin.x + normX * (ballRadius + 6);
     const startY = this.dragOrigin.y + normY * (ballRadius + 6);
     const endX = startX + normX * lineLength;
