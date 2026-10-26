@@ -6,6 +6,7 @@
 import Phaser from 'phaser';
 import './styles.css';
 import { MainMenuScene } from './scenes/MainMenuScene';
+import { VersusScene } from './scenes/VersusScene';
 import { BattleScene } from './scenes/BattleScene';
 
 const config: Phaser.Types.Core.GameConfig = {
@@ -25,7 +26,7 @@ const config: Phaser.Types.Core.GameConfig = {
       debug: false,
     },
   },
-  scene: [MainMenuScene, BattleScene],
+  scene: [MainMenuScene, VersusScene, BattleScene],
 };
 
 new Phaser.Game(config);

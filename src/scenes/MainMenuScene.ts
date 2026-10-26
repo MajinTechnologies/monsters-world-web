@@ -29,7 +29,7 @@ export class MainMenuScene extends Phaser.Scene {
 
   private startBattle(): void {
     this.menuUI.hideUI();
-    this.scene.start('BattleScene');
+    this.scene.start('VersusScene');
   }
 
   showMenu(): void {
