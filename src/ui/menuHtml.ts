@@ -227,6 +227,8 @@ export const MENU_HTML = `
   </div>
 </div>
 
+<!-- ===== BATTLE EXIT MODAL ===== -->
+
 <!-- ===== TAB BAR ===== -->
 <div id="tab-bar" class="hidden fixed bottom-0 left-0 right-0 z-50">
   <div class="max-w-[480px] mx-auto flex items-center justify-around bg-[#16161e] border-t border-white/10 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]">

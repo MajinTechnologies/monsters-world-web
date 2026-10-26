@@ -73,15 +73,29 @@ export class BattleScene extends Phaser.Scene {
     this.input.on('pointermove', this.onPointerMove, this);
     this.input.on('pointerup', this.onPointerUp, this);
 
-    // --- Back button (temporary) ---
-    const backText = this.add.text(540, 1850, '← Volver', {
-      fontSize: '24px',
+    // --- Exit button (X) outside arena ---
+    const exitX = this.add.text(1025, 55, 'X', {
+      fontSize: '56px',
       color: '#ffffff',
-      backgroundColor: '#f59e0b',
-      padding: { x: 20, y: 10 },
-    }).setOrigin(0.5).setInteractive();
+    }).setInteractive({ useHandCursor: true });
 
-    backText.on('pointerdown', () => {
+    const battleModal = document.getElementById('battle-exit-modal');
+    if (!battleModal) console.error('battle-exit-modal not found');
+    const btnContinue = document.getElementById('battle-exit-continue');
+    const btnAbandon = document.getElementById('battle-exit-abandon');
+
+    exitX.on('pointerdown', () => {
+      battleModal?.classList.remove('hidden');
+    });
+    btnContinue?.addEventListener('click', () => {
+      battleModal?.classList.add('hidden');
+    });
+    btnAbandon?.addEventListener('click', () => {
+      battleModal?.classList.add('hidden');
+      const uiInner = document.getElementById('ui-inner');
+      if (uiInner) uiInner.classList.remove('hidden');
+      const tabBar = document.getElementById('tab-bar');
+      if (tabBar) tabBar.classList.remove('hidden');
       this.scene.start('MainMenuScene');
     });
   }
