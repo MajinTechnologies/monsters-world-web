@@ -57,6 +57,19 @@
     </div>
   </div>
 
+  <!-- ===== VICTORY MODAL ===== -->
+  <div id="battle-victory-modal" class="hidden fixed inset-0 z-[200] flex items-center justify-center" style="background:rgba(0,0,0,0.8);">
+    <div class="modal-glow absolute inset-0 pointer-events-none"></div>
+    <div class="relative z-10 bg-[#1e1e2e] border-2 border-white/10 rounded-2xl p-6 mx-6 flex flex-col items-center gap-4 max-w-sm w-full">
+      <h2 class="text-3xl font-extrabold text-game-orange">Victoria</h2>
+      <p class="text-white text-center">¡Felicitaciones!</p>
+      <div class="flex gap-3 w-full">
+        <button id="battle-victory-replay" class="flex-1 py-3 rounded-xl bg-green-500 text-white font-bold text-lg card-hover shadow-lg shadow-green-500/30">Repetir</button>
+        <button id="battle-victory-exit" class="flex-1 py-3 rounded-xl bg-red-500 text-white font-bold text-lg card-hover shadow-lg shadow-red-500/30">Salir</button>
+      </div>
+    </div>
+  </div>
+
   <script type="module" src="/src/main.ts"></script>
 </body>
 </html>

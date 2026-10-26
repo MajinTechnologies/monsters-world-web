@@ -253,6 +253,7 @@ export class BattleScene extends Phaser.Scene {
           enemyObj.setFillStyle(0xef4444);
         } else {
           enemyObj.setFillStyle(0x555555);
+          this.showVictory();
         }
       });
     }
@@ -274,5 +275,28 @@ export class BattleScene extends Phaser.Scene {
         onComplete: () => dmgText.destroy(),
       });
     }
+  }
+
+  private showVictory(): void {
+    const modal = document.getElementById('battle-victory-modal');
+    const btnReplay = document.getElementById('battle-victory-replay');
+    const btnExit = document.getElementById('battle-victory-exit');
+
+    if (!modal) return;
+    modal.classList.remove('hidden');
+
+    btnReplay?.addEventListener('click', () => {
+      modal.classList.add('hidden');
+      this.scene.restart();
+    }, { once: true });
+
+    btnExit?.addEventListener('click', () => {
+      modal.classList.add('hidden');
+      const uiInner = document.getElementById('ui-inner');
+      if (uiInner) uiInner.classList.remove('hidden');
+      const tabBar = document.getElementById('tab-bar');
+      if (tabBar) tabBar.classList.remove('hidden');
+      this.scene.start('MainMenuScene');
+    }, { once: true });
   }
 }
