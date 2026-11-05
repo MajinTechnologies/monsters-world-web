@@ -226,8 +226,8 @@ export class BattleScene extends Phaser.Scene {
     // Only deal damage if moving fast enough
     if (speed < 3) return;
 
-    // Damage = speed (capped)
-    const damage = Math.min(Math.floor(speed), 30);
+    // Damage proportional to speed
+    const damage = Math.max(1, Math.floor(speed));
     this.enemyHp = Math.max(0, this.enemyHp - damage);
 
     // Flash enemy red
