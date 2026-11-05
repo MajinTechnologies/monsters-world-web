@@ -13,7 +13,6 @@ export class BattleScene extends Phaser.Scene {
   private isDragging = false;
   private canDrag = true;
   private directionLine: Phaser.GameObjects.Graphics | null = null;
-  private launchTime = 0;
 
   // Enemy stats
   private enemyHp = 100;
@@ -39,7 +38,7 @@ export class BattleScene extends Phaser.Scene {
     this.player = this.matter.add.gameObject(playerCircle, {
       restitution: 0.9,
       friction: 0.001,
-      frictionAir: 0.005,
+      frictionAir: 0.02,
       density: 0.001,
     }) as unknown as Phaser.Physics.Matter.Image;
     playerCircle.setInteractive();
@@ -107,24 +106,12 @@ export class BattleScene extends Phaser.Scene {
     if (body) {
       const velocity = Math.sqrt(body.velocity.x ** 2 + body.velocity.y ** 2);
 
-      // Ball stopped → freeze it and allow drag again
+      // Ball stopped ' freeze it and allow drag again
       if (!this.isDragging && velocity < 0.3) {
         this.matter.body.setVelocity(body, { x: 0, y: 0 });
         this.canDrag = true;
       } else if (velocity >= 0.3) {
         this.canDrag = false;
-
-        // Gradual braking after 1.2s from launch
-        if (!this.isDragging && this.launchTime > 0) {
-          const elapsed = performance.now() - this.launchTime;
-          if (elapsed >= 1200) {
-            const bv = body.velocity;
-            this.matter.body.setVelocity(body, {
-              x: bv.x * 0.97,
-              y: bv.y * 0.97,
-            });
-          }
-        }
       }
     }
   }
@@ -220,7 +207,6 @@ export class BattleScene extends Phaser.Scene {
           x: normX * velocityMagnitude,
           y: normY * velocityMagnitude,
         });
-        this.launchTime = performance.now();
       }
     }
 
