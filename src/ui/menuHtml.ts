@@ -42,6 +42,38 @@ export const MENU_HTML = `
   </div>
 </div>
 
+<!-- ===== CAMPAIGNS / EVENTOS DE LA HISTORIA ===== -->
+<div id="screen-campaigns" class="screen hidden">
+  <div class="flex items-center justify-between px-4 py-3">
+    <button id="btn-campaigns-back" class="text-sm text-game-gray hover:text-white">&larr; Volver</button>
+    <div class="flex items-center gap-1.5 bg-game-purple/20 rounded-full px-3 py-1">
+      <span>&#x1FA99;</span>
+      <span id="coin-count-campaigns" class="text-sm font-bold text-game-purple">1,250</span>
+    </div>
+  </div>
+  <h2 class="text-xl font-bold text-center text-game-orange mb-2">Eventos de la historia</h2>
+  <p class="text-xs text-game-gray text-center mb-4 px-6">Seleccion&aacute; una campa&ntilde;a</p>
+  <div id="campaigns-list" class="flex flex-col gap-3 px-6 pb-28">
+    <!-- Rendered by MenuUI -->
+  </div>
+</div>
+
+<!-- ===== LEVEL SELECT (DEMO) ===== -->
+<div id="screen-levels" class="screen hidden">
+  <div class="flex items-center justify-between px-4 py-3">
+    <button id="btn-levels-back" class="text-sm text-game-gray hover:text-white">&larr; Volver</button>
+    <div class="flex items-center gap-1.5 bg-game-purple/20 rounded-full px-3 py-1">
+      <span>&#x1FA99;</span>
+      <span id="coin-count-levels" class="text-sm font-bold text-game-purple">1,250</span>
+    </div>
+  </div>
+  <h2 id="levels-title" class="text-xl font-bold text-center text-game-orange mb-2">Demo</h2>
+  <p class="text-xs text-game-gray text-center mb-4 px-6">Seleccion&aacute; un nivel</p>
+  <div id="levels-list" class="flex flex-col gap-3 px-6 pb-28">
+    <!-- Rendered by MenuUI -->
+  </div>
+</div>
+
 <!-- ===== COLLECTION SCREEN ===== -->
 <div id="screen-collection" class="screen hidden">
   <div class="flex items-center justify-between px-4 py-3">

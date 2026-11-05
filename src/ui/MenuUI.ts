@@ -14,6 +14,9 @@ import { ShopUI } from './screens/ShopUI';
 import { SettingsUI } from './screens/SettingsUI';
 import { MENU_HTML } from './menuHtml';
 import { playerCollection } from '../data/PlayerCollection';
+import { CAMPAIGNS, getCampaignById, type CampaignConfig, type LevelConfig } from '../data/campaigns';
+
+export type StartLevelHandler = (campaign: CampaignConfig, level: LevelConfig) => void;
 
 export class MenuUI {
   private container: HTMLElement;
@@ -27,11 +30,12 @@ export class MenuUI {
   private settingsUI!: SettingsUI;
 
   private currentScreen: string = '';
-  private onCampaign?: () => void;
+  private onStartLevel?: StartLevelHandler;
+  private selectedCampaignId: string | null = null;
 
-  constructor(containerId: string = 'ui-inner', onCampaign?: () => void) {
+  constructor(containerId: string = 'ui-inner', onStartLevel?: StartLevelHandler) {
     this.container = document.getElementById(containerId)!;
-    this.onCampaign = onCampaign;
+    this.onStartLevel = onStartLevel;
   }
 
   init(onReady?: () => void): void {
@@ -57,10 +61,18 @@ export class MenuUI {
       }
     });
 
-    // Campaign button
+    // Campaign button -> open "Eventos de la historia" selector
     const btnCampaign = document.getElementById('btn-campaign');
     btnCampaign?.addEventListener('click', () => {
-      if (this.onCampaign) this.onCampaign();
+      this.showCampaigns();
+    });
+
+    // Campaigns / levels back buttons
+    document.getElementById('btn-campaigns-back')?.addEventListener('click', () => {
+      this.showScreen('home');
+    });
+    document.getElementById('btn-levels-back')?.addEventListener('click', () => {
+      this.showCampaigns();
     });
 
     // Online / Mundial blocked
@@ -109,9 +121,16 @@ export class MenuUI {
     if (this.currentScreen && screens[this.currentScreen]) {
       screens[this.currentScreen].hide();
     }
+    // Hide custom DOM screens if leaving them
+    if (this.currentScreen === 'campaigns' || this.currentScreen === 'levels') {
+      document.getElementById(`screen-${this.currentScreen}`)?.classList.add('hidden');
+    }
 
     if (screens[screenId]) {
       screens[screenId].show();
+      this.currentScreen = screenId;
+    } else if (screenId === 'campaigns' || screenId === 'levels') {
+      document.getElementById(`screen-${screenId}`)?.classList.remove('hidden');
       this.currentScreen = screenId;
     }
 
@@ -121,6 +140,77 @@ export class MenuUI {
     } else if (screenId === 'collection') {
       this.collectionUI.refresh();
     }
+  }
+
+  private showCampaigns(): void {
+    this.renderCampaigns();
+    this.showScreen('campaigns');
+  }
+
+  private renderCampaigns(): void {
+    const list = document.getElementById('campaigns-list');
+    if (!list) return;
+    list.innerHTML = CAMPAIGNS.map((campaign) => {
+      const locked = campaign.locked;
+      const lock = locked ? '<span class="absolute left-4">&#x1F512;</span>' : '';
+      const labelClass = locked ? 'inline-block ml-6' : '';
+      const bg = locked ? 'bg-game-purple/50 text-white/90' : 'bg-game-orange text-white';
+      const shadow = locked ? 'shadow-lg shadow-game-purple/20' : 'shadow-lg shadow-game-orange/30';
+      return `
+        <button
+          class="campaign-btn card-hover w-full py-4 rounded-xl ${bg} text-lg font-bold ${shadow} relative"
+          data-campaign-id="${campaign.id}"
+          data-locked="${locked ? '1' : '0'}"
+        >${lock}<span class="${labelClass}">${campaign.name}</span></button>
+      `;
+    }).join('');
+
+    list.querySelectorAll<HTMLButtonElement>('.campaign-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.campaignId || '';
+        const locked = btn.dataset.locked === '1';
+        if (locked) {
+          document.getElementById('construction-modal')?.classList.remove('hidden');
+          return;
+        }
+        const campaign = getCampaignById(id);
+        if (campaign) this.showLevels(campaign);
+      });
+    });
+  }
+
+  private showLevels(campaign: CampaignConfig): void {
+    this.selectedCampaignId = campaign.id;
+    void this.selectedCampaignId; // retained for Step 4 flow
+    const title = document.getElementById('levels-title');
+    if (title) title.textContent = campaign.name;
+    this.renderLevels(campaign);
+    this.showScreen('levels');
+  }
+
+  private renderLevels(campaign: CampaignConfig): void {
+    const list = document.getElementById('levels-list');
+    if (!list) return;
+    list.innerHTML = campaign.levels.map((level) => `
+      <button
+        class="level-btn card-hover w-full py-4 rounded-xl bg-game-blue text-white text-lg font-bold shadow-lg shadow-game-blue/20"
+        data-level-id="${level.id}"
+      >${level.name}</button>
+    `).join('');
+
+    // Level selection will start battle in Step 4 (needs levelConfig flow)
+    list.querySelectorAll<HTMLButtonElement>('.level-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const levelId = btn.dataset.levelId || '';
+        const level = campaign.levels.find((l) => l.id === levelId);
+        if (level) this.onLevelSelected(campaign, level);
+      });
+    });
+  }
+
+  private onLevelSelected(campaign: CampaignConfig, level: LevelConfig): void {
+    // Pass levelConfig and start battle via MainMenuScene/VersusScene/BattleScene
+    this.onStartLevel?.(campaign, level);
   }
 
   private onTabChange(tab: TabId): void {
@@ -154,5 +244,17 @@ export class MenuUI {
   showUI(): void {
     this.container.classList.remove('hidden');
     this.tabBar.show();
+  }
+
+  /** Show UI and return to the level selector for the given campaign (post-battle). */
+  showLevelSelect(campaignId: string): void {
+    this.container.classList.remove('hidden');
+    this.tabBar.show();
+    const campaign = getCampaignById(campaignId) ?? getCampaignById('demo');
+    if (campaign) {
+      this.showLevels(campaign);
+    } else {
+      this.showScreen('home');
+    }
   }
 }
