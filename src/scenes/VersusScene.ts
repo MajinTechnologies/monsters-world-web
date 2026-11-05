@@ -3,14 +3,22 @@
  */
 
 import Phaser from 'phaser';
+import type { CampaignConfig, LevelConfig } from '../data/campaigns';
 
 export class VersusScene extends Phaser.Scene {
   private loadingBar!: Phaser.GameObjects.Rectangle;
   private loadingBarWidth = 0;
   private readonly barMaxWidth = 600;
+  private campaign?: CampaignConfig;
+  private level?: LevelConfig;
 
   constructor() {
     super({ key: 'VersusScene' });
+  }
+
+  init(data: { campaign?: CampaignConfig; level?: LevelConfig }): void {
+    this.campaign = data?.campaign;
+    this.level = data?.level;
   }
 
   create(): void {
@@ -57,7 +65,7 @@ export class VersusScene extends Phaser.Scene {
         this.loadingBar.width = this.loadingBarWidth;
       },
       onComplete: () => {
-        this.scene.start('BattleScene');
+        this.scene.start('BattleScene', { campaign: this.campaign, level: this.level });
       },
     });
   }
