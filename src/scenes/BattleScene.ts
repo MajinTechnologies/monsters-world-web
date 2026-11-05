@@ -71,6 +71,7 @@ export class BattleScene extends Phaser.Scene {
     this.input.on('pointerdown', this.onPointerDown, this);
     this.input.on('pointermove', this.onPointerMove, this);
     this.input.on('pointerup', this.onPointerUp, this);
+    this.input.on('pointerupoutside', this.onPointerUp, this);
 
     // --- Exit button (X) outside arena ---
     const exitX = this.add.text(1025, 55, 'X', {
@@ -139,10 +140,28 @@ export class BattleScene extends Phaser.Scene {
     }
   }
 
+  private drawDottedSegment(x1: number, y1: number, x2: number, y2: number, segmentLength: number): void {
+    if (!this.directionLine) return;
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    const len = Math.sqrt(dx * dx + dy * dy);
+    if (len < 1) return;
+    const segments = Math.floor(len / segmentLength);
+    for (let i = 0; i < segments; i += 2) {
+      const t1 = i / segments;
+      const t2 = Math.min((i + 1) / segments, 1);
+      const sx1 = Phaser.Math.Linear(x1, x2, t1);
+      const sy1 = Phaser.Math.Linear(y1, y2, t1);
+      const sx2 = Phaser.Math.Linear(x1, x2, t2);
+      const sy2 = Phaser.Math.Linear(y1, y2, t2);
+      this.directionLine.lineBetween(sx1, sy1, sx2, sy2);
+    }
+  }
+
   private onPointerMove(pointer: Phaser.Input.Pointer): void {
     if (!this.isDragging || !this.player || !this.directionLine) return;
 
-    // Slingshot: ball stays at dragOrigin, line shows launch trajectory
+    // Slingshot: ball stays at dragOrigin, line shows launch trajectory with wall bounces
     this.directionLine.clear();
     this.directionLine.lineStyle(3, 0xffffff, 0.5);
 
@@ -153,35 +172,88 @@ export class BattleScene extends Phaser.Scene {
 
     if (dist < 10) return;
 
-    const normX = dirX / dist;
-    const normY = dirY / dist;
+    let nx = dirX / dist;
+    let ny = dirY / dist;
 
     // Line length = drag distance (clamped)
     const lineLength = Math.min(dist, 400);
 
-    // Start from edge of ball, slightly offset
+    // Start from edge of ball
     const ballRadius = 36;
-    const startX = this.dragOrigin.x + normX * (ballRadius + 6);
-    const startY = this.dragOrigin.y + normY * (ballRadius + 6);
-    const endX = startX + normX * lineLength;
-    const endY = startY + normY * lineLength;
+    let posX = this.dragOrigin.x + nx * (ballRadius + 6);
+    let posY = this.dragOrigin.y + ny * (ballRadius + 6);
 
-    // Draw dotted line
+    // Arena bounds (matching world bounds)
+    const left = 60;
+    const right = 60 + 960;
+    const top = 110;
+    const bottom = 110 + 1700;
+
+    let remaining = lineLength;
+    let bounces = 0;
+    const maxBounces = 1;
     const segmentLength = 15;
-    const segments = Math.floor(lineLength / segmentLength);
 
-    for (let i = 0; i < segments; i += 2) {
-      const t1 = i / segments;
-      const t2 = Math.min((i + 1) / segments, 1);
-      const x1 = Phaser.Math.Linear(startX, endX, t1);
-      const y1 = Phaser.Math.Linear(startY, endY, t1);
-      const x2 = Phaser.Math.Linear(startX, endX, t2);
-      const y2 = Phaser.Math.Linear(startY, endY, t2);
-      this.directionLine.lineBetween(x1, y1, x2, y2);
+    while (remaining > 1 && bounces <= maxBounces) {
+      let tMin = Number.POSITIVE_INFINITY;
+      let hitWall: 'left' | 'right' | 'top' | 'bottom' | null = null;
+
+      if (nx < 0) {
+        const t = (left - posX) / nx;
+        if (t > 0.001 && t < tMin) {
+          tMin = t;
+          hitWall = 'left';
+        }
+      }
+      if (nx > 0) {
+        const t = (right - posX) / nx;
+        if (t > 0.001 && t < tMin) {
+          tMin = t;
+          hitWall = 'right';
+        }
+      }
+      if (ny < 0) {
+        const t = (top - posY) / ny;
+        if (t > 0.001 && t < tMin) {
+          tMin = t;
+          hitWall = 'top';
+        }
+      }
+      if (ny > 0) {
+        const t = (bottom - posY) / ny;
+        if (t > 0.001 && t < tMin) {
+          tMin = t;
+          hitWall = 'bottom';
+        }
+      }
+
+      if (hitWall && tMin < remaining - 0.01) {
+        const hitX = posX + nx * tMin;
+        const hitY = posY + ny * tMin;
+        this.drawDottedSegment(posX, posY, hitX, hitY, segmentLength);
+
+        // Reflect direction
+        if (hitWall === 'left' || hitWall === 'right') {
+          nx = -nx;
+        } else if (hitWall === 'top' || hitWall === 'bottom') {
+          ny = -ny;
+        }
+
+        posX = hitX;
+        posY = hitY;
+        remaining -= tMin;
+        bounces++;
+        continue;
+      }
+
+      const endX = posX + nx * remaining;
+      const endY = posY + ny * remaining;
+      this.drawDottedSegment(posX, posY, endX, endY, segmentLength);
+      break;
     }
   }
 
-  private onPointerUp(_pointer: Phaser.Input.Pointer): void {
+  private onPointerUp(pointer: Phaser.Input.Pointer): void {
     if (!this.isDragging || !this.player) return;
     this.isDragging = false;
 
@@ -190,8 +262,8 @@ export class BattleScene extends Phaser.Scene {
     this.matter.body.setStatic(body, false);
 
     // Calculate launch: from pointer toward ball (opposite of drag)
-    const dirX = this.dragOrigin.x - _pointer.x;
-    const dirY = this.dragOrigin.y - _pointer.y;
+    const dirX = this.dragOrigin.x - pointer.x;
+    const dirY = this.dragOrigin.y - pointer.y;
     const dist = Math.sqrt(dirX * dirX + dirY * dirY);
 
     if (dist > 10) {
