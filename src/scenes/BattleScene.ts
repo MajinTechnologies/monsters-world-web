@@ -71,6 +71,7 @@ export class BattleScene extends Phaser.Scene {
     this.input.on('pointerdown', this.onPointerDown, this);
     this.input.on('pointermove', this.onPointerMove, this);
     this.input.on('pointerup', this.onPointerUp, this);
+    this.input.on('pointerupoutside', this.onPointerUp, this);
 
     // --- Exit button (X) outside arena ---
     const exitX = this.add.text(1025, 55, 'X', {
@@ -181,7 +182,7 @@ export class BattleScene extends Phaser.Scene {
     }
   }
 
-  private onPointerUp(_pointer: Phaser.Input.Pointer): void {
+  private onPointerUp(pointer: Phaser.Input.Pointer): void {
     if (!this.isDragging || !this.player) return;
     this.isDragging = false;
 
@@ -190,8 +191,8 @@ export class BattleScene extends Phaser.Scene {
     this.matter.body.setStatic(body, false);
 
     // Calculate launch: from pointer toward ball (opposite of drag)
-    const dirX = this.dragOrigin.x - _pointer.x;
-    const dirY = this.dragOrigin.y - _pointer.y;
+    const dirX = this.dragOrigin.x - pointer.x;
+    const dirY = this.dragOrigin.y - pointer.y;
     const dist = Math.sqrt(dirX * dirX + dirY * dirY);
 
     if (dist > 10) {
